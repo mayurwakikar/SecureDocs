@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div th:insert="~{layouts/video-layout :: video}"></div>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1 class="welcome-text-dashboard">Admin Dashboard</h1>
+        <a th:href="@{/logout}" class="logout-btn-dashboard">Logout</a>
+    </div>
+
+    <div th:if="${message}" class="alert alert-success">
+        <span th:text="${message}"></span>
+    </div>
+    <div th:if="${error}" class="alert alert-danger">
+        <span th:text="${error}"></span>
+    </div>
+
+    <div class="documents-section">
+        <h3>All Users</h3>
+        <table class="documents-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${users.isEmpty()}">
+                <td colspan="5" style="text-align: center;">No users found.</td>
+            </tr>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.role}"></td>
+                <td>
+                    <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="action-link">Edit</a>
+                    <a th:href="@{/admin/users/delete/{id}(id=${user.id})}" class="action-link delete-link">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

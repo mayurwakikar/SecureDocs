@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 - Access Denied | SecureDocs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+          margin: 0;
+          font-family: 'Montserrat', sans-serif;
+          background: linear-gradient(135deg, #0a0f1c, #111827, #0d121f);
+          color: #e6edf3;
+          overflow-x: hidden;
+          text-align: center;
+        }
+
+        .particles {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          overflow: hidden;
+          z-index: -1;
+        }
+
+        .particle {
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(0, 245, 212, 0.7);
+          pointer-events: none;
+        }
+
+        header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 20px 50px;
+          background: rgba(13, 17, 23, 0.9);
+          position: sticky;
+          top: 0;
+          z-index: 1000;
+        }
+
+        .logo {
+          display: flex;
+          align-items: center;
+          font-size: 1.5rem;
+          font-weight: bold;
+          color: #00f5d4;
+          gap: 10px;
+        }
+
+        .lock {
+          font-size: 26px;
+          animation: glow 1.8s infinite alternate;
+          text-shadow: 0 0 10px #00f5d4, 0 0 20px #00f5d4, 0 0 40px #00f5d4;
+        }
+
+        @keyframes glow {
+          from { opacity: 0.7; text-shadow: 0 0 10px #00f5d4, 0 0 20px #00f5d4; }
+          to   { opacity: 1; text-shadow: 0 0 20px #00f5d4, 0 0 40px #00f5d4, 0 0 60px #00f5d4; }
+        }
+
+        .error-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: calc(100vh - 80px);
+          padding: 20px;
+        }
+
+        .error-container h2 {
+          font-size: 2rem;
+          color: #ef4444;
+          margin-bottom: 15px;
+        }
+
+        .error-container p {
+          font-size: 1.1rem;
+          color: #d1d5db;
+          margin-bottom: 20px;
+        }
+
+        .error-container a {
+          background-color: #00f5d4;
+          color: #0d1117;
+          padding: 12px 25px;
+          border-radius: 8px;
+          text-decoration: none;
+          font-weight: bold;
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .error-container a:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(0, 245, 212, 0.6);
+        }
+
+        footer {
+          text-align: center;
+          padding: 20px;
+          background: rgba(0,0,0,0.4);
+          margin-top: 20px;
+          color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+<!-- Multi-layer Particles -->
+<div class="particles"></div>
+
+<header>
+    <div class="logo">
+        SecureDocs <span class="lock">🔒</span>
+    </div>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+</header>
+
+<!-- Error Section -->
+<div class="error-container">
+    <h2>403 - Access Denied</h2>
+    <p>You do not have permission to view this page.</p>
+    <a th:href="@{/dashboard}">Go to Dashboard</a>
+</div>
+
+<footer>
+    © 2025 SecureDocs. All rights reserved.
+</footer>
+
+<script>
+    /* Particle system */
+    const particlesContainer = document.querySelector(".particles");
+    const layers = [
+      { count: 50, size: [2, 5], speed: 0.2 },
+      { count: 30, size: [3, 7], speed: 0.5 },
+      { count: 20, size: [5, 10], speed: 1.0 }
+    ];
+    let particles = [];
+
+    layers.forEach((layer, layerIndex) => {
+      for (let i = 0; i < layer.count; i++) {
+        const particle = document.createElement("div");
+        particle.classList.add("particle");
+        const size = Math.random() * (layer.size[1] - layer.size[0]) + layer.size[0];
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.dataset.layer = layerIndex;
+        particlesContainer.appendChild(particle);
+        particles.push({ el: particle, speed: layer.speed });
+      }
+    });
+
+    window.addEventListener("scroll", () => {
+      const scrollY = window.scrollY;
+      particles.forEach(p => {
+        const offset = scrollY * p.speed * 0.3;
+        p.el.style.transform = `translateY(${offset}px)`;
+      });
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      const { clientX, clientY } = e;
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      particles.forEach(p => {
+        const dx = (clientX - centerX) * 0.002 * p.speed;
+        const dy = (clientY - centerY) * 0.002 * p.speed;
+        p.el.style.transform += ` translate(${dx}px, ${dy}px)`;
+      });
+    });
+</script>
+</body>
+</html>
